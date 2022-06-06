@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
+import '../page/forgot_password_page.dart';
 
 class LoginWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
@@ -73,6 +74,20 @@ class _LoginWidgetState extends State<LoginWidget> {
           onPressed: signIn,
         ),
         const SizedBox(height: 24),
+        GestureDetector(
+          child: Text(
+            'Esqueceu a senha?',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 20,
+            ),
+          ),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const ForgotPasswordPage(),
+          )),
+        ),
+        const SizedBox(height: 16),
         RichText(
           text: TextSpan(
             style: const TextStyle(color: Colors.white, fontSize: 20),
