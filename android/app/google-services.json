@@ -1,0 +1,162 @@
+{
+  "project_info": {
+    "project_number": "328063784849",
+    "project_id": "kweedo-d552a",
+    "storage_bucket": "kweedo-d552a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328063784849:android:d0e3dcd7f3e91db3816c30",
+        "android_client_info": {
+          "package_name": "com.example.kweedo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328063784849-t6hnvf4u84vejs0gu5hp7ijou0s5bkok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByRt9-98LdVjdaMOz_LLKc-FLJiLaLJ0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328063784849-t6hnvf4u84vejs0gu5hp7ijou0s5bkok.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "328063784849-47fmhpi1u7fcl69fqk62na44ejleauk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kweedo.kweedo"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328063784849:android:d4478749216d1414816c30",
+        "android_client_info": {
+          "package_name": "com.kweedo.kweedo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328063784849-f6u0rvfsk8ibg22q92idd80jn0bpmk1k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kweedo.kweedo",
+            "certificate_hash": "641447de2f19bbdca48f5354f5c9d1824ea7f81b"
+          }
+        },
+        {
+          "client_id": "328063784849-t6hnvf4u84vejs0gu5hp7ijou0s5bkok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByRt9-98LdVjdaMOz_LLKc-FLJiLaLJ0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328063784849-t6hnvf4u84vejs0gu5hp7ijou0s5bkok.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "328063784849-47fmhpi1u7fcl69fqk62na44ejleauk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kweedo.kweedo"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328063784849:android:ebe19131299a1037816c30",
+        "android_client_info": {
+          "package_name": "com.tommymolto.kweedo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328063784849-t6hnvf4u84vejs0gu5hp7ijou0s5bkok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByRt9-98LdVjdaMOz_LLKc-FLJiLaLJ0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328063784849-t6hnvf4u84vejs0gu5hp7ijou0s5bkok.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "328063784849-47fmhpi1u7fcl69fqk62na44ejleauk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kweedo.kweedo"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328063784849:android:bb640644ace0741b816c30",
+        "android_client_info": {
+          "package_name": "com.tommymolto.kweedo.kweedo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328063784849-t6hnvf4u84vejs0gu5hp7ijou0s5bkok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByRt9-98LdVjdaMOz_LLKc-FLJiLaLJ0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328063784849-t6hnvf4u84vejs0gu5hp7ijou0s5bkok.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "328063784849-47fmhpi1u7fcl69fqk62na44ejleauk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kweedo.kweedo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
