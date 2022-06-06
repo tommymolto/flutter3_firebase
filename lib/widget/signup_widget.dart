@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:kweedo/helpers/helpers_auth.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 import '../main.dart';
 
@@ -23,6 +25,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+
 
   @override
   void dispose() {
@@ -112,6 +116,11 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 ),
               ],
             ),
+          ),const SizedBox(height: 20),
+          SignInButton(
+            Buttons.Google,
+            text: "Entrar com Google",
+            onPressed: signInWithGoogle,
           ),
         ],
       ),
@@ -141,5 +150,21 @@ class _SignUpWidgetState extends State<SignUpWidget> {
 
     // Navigator.of(context) not working!
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    print(googleUser.toString());
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
