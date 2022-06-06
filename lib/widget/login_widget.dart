@@ -1,13 +1,23 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
 
 class LoginWidget extends StatefulWidget {
+  final VoidCallback onClickedSignUp;
+
+  const LoginWidget({
+    Key? key,
+    required this.onClickedSignUp,
+  }) : super(key: key);
+
   @override
   _LoginWidgetState createState() => _LoginWidgetState();
+
+
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
@@ -57,10 +67,28 @@ class _LoginWidgetState extends State<LoginWidget> {
           ),
           icon: const Icon(Icons.lock_open, size: 32),
           label: const Text(
-            'Sign In',
+            'Entrar',
             style: TextStyle(fontSize: 24),
           ),
           onPressed: signIn,
+        ),
+        const SizedBox(height: 24),
+        RichText(
+          text: TextSpan(
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+            text: 'Não tem uma conta?  ',
+            children: [
+              TextSpan(
+                recognizer: TapGestureRecognizer()
+                  ..onTap = widget.onClickedSignUp,
+                text: 'Cadastrar',
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     ),

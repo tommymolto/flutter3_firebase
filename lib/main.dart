@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:kweedo/page/auth_page.dart';
 import 'package:kweedo/page/home_page.dart';
 import 'package:kweedo/widget/login_widget.dart';
 import 'animation/fade_animation.dart';
@@ -43,11 +44,11 @@ class MainPage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return const Center(child: Text('Algo deu errado!'));
+          return const Center(child: Text('Something went wrong!'));
         } else if (snapshot.hasData) {
           return HomePage();
         } else {
-          return LoginWidget();
+          return AuthPage();
         }
       },
     ),
