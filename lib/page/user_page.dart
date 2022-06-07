@@ -13,6 +13,7 @@ import '../model/user.dart';
 
 class UserPage extends StatefulWidget {
   final User? user;
+
   const UserPage({Key? key, this.user}) : super(key: key);
 
   @override
@@ -24,7 +25,7 @@ class _UserPageState extends State<UserPage> {
   late TextEditingController controllerName;
   late TextEditingController controllerAge;
   late TextEditingController controllerDate;
-  late String avatarController;
+  String avatarController = '';
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
 
@@ -67,7 +68,6 @@ class _UserPageState extends State<UserPage> {
               icon: const Icon(Icons.delete),
               onPressed: () {
                 deleteUser(widget.user!);
-
                 final snackBar = SnackBar(
                   backgroundColor: Colors.green,
                   content: Text(
@@ -76,7 +76,6 @@ class _UserPageState extends State<UserPage> {
                   ),
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
                 Navigator.pop(context);
               },
             ),
@@ -91,7 +90,7 @@ class _UserPageState extends State<UserPage> {
               controller: controllerName,
               decoration: decoration('Nome'),
               validator: (text) =>
-              text != null && text.isEmpty ? 'Nome invalido' : null,
+                  text != null && text.isEmpty ? 'Nome invalido' : null,
             ),
             const SizedBox(height: 24),
             TextFormField(
@@ -107,7 +106,8 @@ class _UserPageState extends State<UserPage> {
               controller: controllerDate,
               decoration: decoration('Aniversario'),
               validator: (dateTime) =>
-              dateTime == null ? 'Dados invalidos' : null,
+                  dateTime == null ? 'Dados invalidos' : null,
+              initialValue: controllerDate.text.isNotEmpty ? DateTime.parse(controllerDate.text) : null,
               format: DateFormat('yyyy-MM-dd'),
               onShowPicker: (context, currentValue) => showDatePicker(
                 context: context,
@@ -117,39 +117,36 @@ class _UserPageState extends State<UserPage> {
               ),
             ),
             const SizedBox(height: 32),
-            if (pickedFile != null)
-              Expanded(
-                child: Container(
-                  color: Colors.blue[100],
-                  child: buildMediaPreview(),
-                ),
-              ),
+
             const SizedBox(height: 32),
-            ElevatedButton(
+            avatarController.isNotEmpty ? GestureDetector(
+              child: SizedBox(height: 24,
+                  child: Image.network(
+                     avatarController,
+                    // width: double.infinity,
+                    fit: BoxFit.fitHeight,
+                  )),
+              onTap: selectFile,
+            ) : ElevatedButton(
               child: const Text('Select File'),
-              onPressed: selectFile,
+              onPressed:selectFile,
             ),
+
             const SizedBox(height: 32),
-            ElevatedButton(
-              child: const Text('Upload File'),
-              onPressed: uploadFile,
-            ),
-            const SizedBox(height: 32),
-            buildProgress(),
-            const SizedBox(height: 32),
+
             ElevatedButton(
               child: Text(isEditing ? 'Save' : 'Create'),
               onPressed: () {
                 final isValid = formKey.currentState!.validate();
 
                 if (isValid) {
+                  print('avatar: $avatarController');
                   final user = User(
-                    id: widget.user?.id ?? '',
-                    name: controllerName.text,
-                    age: int.parse(controllerAge.text),
-                    birthday: DateTime.parse(controllerDate.text),
-                    avatar: avatarController
-                  );
+                      id: widget.user?.id ?? '',
+                      name: controllerName.text,
+                      age: int.parse(controllerAge.text),
+                      birthday: DateTime.parse(controllerDate.text),
+                      avatar: avatarController);
 
                   if (isEditing) {
                     updateUser(user);
@@ -175,10 +172,11 @@ class _UserPageState extends State<UserPage> {
       ),
     );
   }
+
   InputDecoration decoration(String label) => InputDecoration(
-    labelText: label,
-    border: const OutlineInputBorder(),
-  );
+        labelText: label,
+        border: const OutlineInputBorder(),
+      );
 
   Widget buildMediaPreview() {
     final file = File(pickedFile!.path!);
@@ -187,17 +185,14 @@ class _UserPageState extends State<UserPage> {
       case 'jpg':
       case 'jpeg':
       case 'png':
-        return Image.file(
-          file,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        );
-     /* case 'mp4':
+
+      /* case 'mp4':
         return VideoPlayerWidget(file: file);*/
       default:
         return Center(child: Text(pickedFile!.name));
     }
   }
+
   Widget buildProgress() => StreamBuilder<TaskSnapshot>(
       stream: uploadTask?.snapshotEvents,
       builder: (context, snapshot) {
@@ -228,6 +223,7 @@ class _UserPageState extends State<UserPage> {
           return const SizedBox(height: 50);
         }
       });
+
   Future createUser(User user) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc();
     user.id = docUser.id;
@@ -235,26 +231,32 @@ class _UserPageState extends State<UserPage> {
     final json = user.toJson();
     await docUser.set(json);
   }
+
   Future updateUser(User user) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc(user.id);
 
     final json = user.toJson();
     await docUser.update(json);
   }
+
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
 
+
     setState(() {
       pickedFile = result.files.first;
     });
+    await uploadFile();
   }
+
   Future deleteUser(User user) async {
     /// Reference to document
     final docUser = FirebaseFirestore.instance.collection('users').doc(user.id);
 
     await docUser.delete();
   }
+
   Future uploadFile() async {
     final path = 'files/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
@@ -268,8 +270,9 @@ class _UserPageState extends State<UserPage> {
 
     final urlDownload = await snapshot.ref.getDownloadURL();
     //print('Download Link: $urlDownload');
-    avatarController = urlDownload;
     setState(() {
+      avatarController = urlDownload;
+
       uploadTask = null;
     });
   }
