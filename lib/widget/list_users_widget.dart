@@ -60,6 +60,9 @@ class _ListUsersWidgetState extends State<ListUsersWidget> {
     leading: CircleAvatar(child: Text('${user.age}')),
     title: Text(user.name),
     subtitle: Text(user.birthday.toIso8601String()),
+    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => UserPage(user: user),
+    )),
   );
 
   Stream<List<User>> readUsers() => FirebaseFirestore.instance
