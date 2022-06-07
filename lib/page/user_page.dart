@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../main.dart';
 import '../model/user.dart';
@@ -14,7 +15,10 @@ import '../model/user.dart';
 class UserPage extends StatefulWidget {
   final User? user;
 
-  const UserPage({Key? key, this.user}) : super(key: key);
+   UserPage({Key? key, this.user}) : super(key: key) {
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'UserPage');
+
+  }
 
   @override
   State<UserPage> createState() => _UserPageState();
@@ -57,6 +61,8 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'UserPageState');
+
     final isEditing = widget.user != null;
 
     return Scaffold(
@@ -225,6 +231,9 @@ class _UserPageState extends State<UserPage> {
       });
 
   Future createUser(User user) async {
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'create_user'
+    );
     final docUser = FirebaseFirestore.instance.collection('users').doc();
     user.id = docUser.id;
 
@@ -233,6 +242,9 @@ class _UserPageState extends State<UserPage> {
   }
 
   Future updateUser(User user) async {
+    await FirebaseAnalytics.instance.logEvent(
+        name: 'update_user'
+    );
     final docUser = FirebaseFirestore.instance.collection('users').doc(user.id);
 
     final json = user.toJson();
@@ -251,6 +263,13 @@ class _UserPageState extends State<UserPage> {
   }
 
   Future deleteUser(User user) async {
+    await FirebaseAnalytics.instance.logEvent(
+        name: 'delete_user',
+      parameters: {
+        'firebase_screen': 'delete_user',
+        'firebase_screen_class': 'none',
+      }
+    );
     /// Reference to document
     final docUser = FirebaseFirestore.instance.collection('users').doc(user.id);
 

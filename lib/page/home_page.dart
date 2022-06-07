@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,8 @@ class TempHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'HomePage');
+
     final user = FirebaseAuth.instance.currentUser!;
 
     return Padding(
@@ -90,7 +93,13 @@ class _HomePageState extends State<HomePage> {
       'age': 21,
       'birthday': DateTime(2001, 7, 28),
     };
-
+    await FirebaseAnalytics.instance.logEvent(
+      name: "create_user",
+      parameters: {
+        "content_type": "user",
+        "name": name,
+      },
+    );
     /// Create document and write data to Firebase
     await docUser.set(json);
   }
