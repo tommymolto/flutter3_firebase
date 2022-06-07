@@ -57,7 +57,12 @@ class _ListUsersWidgetState extends State<ListUsersWidget> {
   );
 
   Widget buildUser(User user) => ListTile(
-    leading: CircleAvatar(child: Text('${user.age}')),
+    leading: user.avatar != null ? CircleAvatar(
+      radius: 30.0,
+      backgroundImage:
+      NetworkImage("${user.avatar}"),
+      backgroundColor: Colors.transparent,
+    ) : CircleAvatar(child: Text('${user.age}')),
     title: Text(user.name),
     subtitle: Text(user.birthday.toIso8601String()),
     onTap: () => Navigator.of(context).push(MaterialPageRoute(

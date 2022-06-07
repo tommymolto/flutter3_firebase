@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '../main.dart';
 import '../model/user.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +24,9 @@ class _UserPageState extends State<UserPage> {
   late TextEditingController controllerName;
   late TextEditingController controllerAge;
   late TextEditingController controllerDate;
+  late String avatarController;
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
 
   @override
   void initState() {
@@ -34,6 +41,7 @@ class _UserPageState extends State<UserPage> {
       controllerName.text = user.name;
       controllerAge.text = user.age.toString();
       controllerDate.text = DateFormat('yyyy-MM-dd').format(user.birthday);
+      avatarController = user.avatar ?? '';
     }
   }
 
@@ -109,6 +117,26 @@ class _UserPageState extends State<UserPage> {
               ),
             ),
             const SizedBox(height: 32),
+            if (pickedFile != null)
+              Expanded(
+                child: Container(
+                  color: Colors.blue[100],
+                  child: buildMediaPreview(),
+                ),
+              ),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              child: const Text('Select File'),
+              onPressed: selectFile,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              child: const Text('Upload File'),
+              onPressed: uploadFile,
+            ),
+            const SizedBox(height: 32),
+            buildProgress(),
+            const SizedBox(height: 32),
             ElevatedButton(
               child: Text(isEditing ? 'Save' : 'Create'),
               onPressed: () {
@@ -120,6 +148,7 @@ class _UserPageState extends State<UserPage> {
                     name: controllerName.text,
                     age: int.parse(controllerAge.text),
                     birthday: DateTime.parse(controllerDate.text),
+                    avatar: avatarController
                   );
 
                   if (isEditing) {
@@ -151,6 +180,54 @@ class _UserPageState extends State<UserPage> {
     border: const OutlineInputBorder(),
   );
 
+  Widget buildMediaPreview() {
+    final file = File(pickedFile!.path!);
+
+    switch (pickedFile!.extension!.toLowerCase()) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+        return Image.file(
+          file,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        );
+     /* case 'mp4':
+        return VideoPlayerWidget(file: file);*/
+      default:
+        return Center(child: Text(pickedFile!.name));
+    }
+  }
+  Widget buildProgress() => StreamBuilder<TaskSnapshot>(
+      stream: uploadTask?.snapshotEvents,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final data = snapshot.data!;
+          double progress = data.bytesTransferred / data.totalBytes;
+
+          return SizedBox(
+            height: 50,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                LinearProgressIndicator(
+                  value: progress,
+                  backgroundColor: Colors.grey,
+                  color: Colors.green,
+                ),
+                Center(
+                  child: Text(
+                    '${(100 * progress).roundToDouble()}%',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return const SizedBox(height: 50);
+        }
+      });
   Future createUser(User user) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc();
     user.id = docUser.id;
@@ -164,11 +241,36 @@ class _UserPageState extends State<UserPage> {
     final json = user.toJson();
     await docUser.update(json);
   }
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
 
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
   Future deleteUser(User user) async {
     /// Reference to document
     final docUser = FirebaseFirestore.instance.collection('users').doc(user.id);
 
     await docUser.delete();
+  }
+  Future uploadFile() async {
+    final path = 'files/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    //print('Download Link: $urlDownload');
+    avatarController = urlDownload;
+    setState(() {
+      uploadTask = null;
+    });
   }
 }
