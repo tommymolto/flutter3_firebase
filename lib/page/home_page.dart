@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kweedo/page/user_page.dart';
+import 'package:kweedo/widget/list_users_widget.dart';
 
 class TempHomePage extends StatelessWidget {
   const TempHomePage({Key? key}) : super(key: key);
@@ -9,10 +10,11 @@ class TempHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
-print(user);
+
     return Padding(
         padding: const EdgeInsets.all(32),
-        child: Column(
+        child: ListUsersWidget(),
+      /*Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
@@ -36,8 +38,9 @@ print(user);
               ),
               onPressed: () => FirebaseAuth.instance.signOut(),
             ),
+
           ],
-        ),
+        ),*/
 
     );
   }
@@ -59,21 +62,21 @@ class _HomePageState extends State<HomePage> {
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
-            final name = controller.text;
-
-            createUser(name: name);
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => UserPage(),
+            ));
           },
         ),
       ],
     ),
-    floatingActionButton: FloatingActionButton(
+    /*floatingActionButton: FloatingActionButton(
       child: const Icon(Icons.add),
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => UserPage(),
         ));
       },
-    ),
+    ),*/
     body: const TempHomePage(),
   );
 
