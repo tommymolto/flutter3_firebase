@@ -72,7 +72,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             decoration: const InputDecoration(labelText: 'Senha'),
             obscureText: true,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) => value != null && value.length < 6
+            validator: (value) => value != null && value.trim().length < 6
                 ? 'Enter min. 6 characters'
                 : null,
           ),
@@ -116,7 +116,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 ),
               ],
             ),
-          ),const SizedBox(height: 20),
+          ),
+          const SizedBox(height: 20),
           SignInButton(
             Buttons.Google,
             text: "Entrar com Google",

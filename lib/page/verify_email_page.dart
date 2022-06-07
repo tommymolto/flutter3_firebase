@@ -14,7 +14,7 @@ class VerifyEmailPage extends StatefulWidget {
 }
 
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
-  bool isEmailVerified = false;
+  bool isEmailVerified = true;
   bool canResendEmail = false;
   Timer? timer;
 
@@ -23,7 +23,8 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     super.initState();
 
     /// user needs to be created before!
-    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    //isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    isEmailVerified = true;
 
     if (!isEmailVerified) {
       sendVerificationEmail();
