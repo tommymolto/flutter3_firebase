@@ -1,7 +1,10 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:kweedo/helpers/notification_helper.dart';
+import 'package:kweedo/page/settings_page.dart';
 import 'package:kweedo/page/user_page.dart';
 import 'package:kweedo/widget/list_users_widget.dart';
 
@@ -56,23 +59,33 @@ class HomePage extends StatefulWidget {
 }
 class _HomePageState extends State<HomePage> {
   final controller = TextEditingController();
+  final remoteConfig = FirebaseRemoteConfig.instance;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: TextField(controller: controller),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => UserPage(),
-            ));
-          },
-        ),
-      ],
-    ),
-    /*floatingActionButton: FloatingActionButton(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: TextField(controller: controller),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => UserPage(),
+              ));
+            },
+          ),
+          remoteConfig.getBool('settings') ? IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const SettingsPage(),
+              ));
+            },
+          ): const SizedBox(height: 0,),
+        ],
+      ),
+      /*floatingActionButton: FloatingActionButton(
       child: const Icon(Icons.add),
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(
@@ -80,8 +93,9 @@ class _HomePageState extends State<HomePage> {
         ));
       },
     ),*/
-    body: const TempHomePage(),
-  );
+      body: const TempHomePage(),
+    );
+  }
 
   Future createUser({required String name}) async {
     /// Reference to document

@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kweedo/widget/avaliacao_radio_button_widget.dart';
 
 import '../model/user.dart';
 import '../page/user_page.dart';
 
 class ListUsersWidget extends StatefulWidget {
+  const ListUsersWidget({Key? key}) : super(key: key);
+
   @override
   _ListUsersWidgetState createState() => _ListUsersWidgetState();
 }
@@ -65,6 +68,7 @@ class _ListUsersWidgetState extends State<ListUsersWidget> {
     ) : CircleAvatar(child: Text('${user.age}')),
     title: Text(user.name),
     subtitle: Text(user.birthday.toIso8601String()),
+    //subtitle: AvaliacaoRadioButtonWidget(questao: 'oi',),
     onTap: () => Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => UserPage(user: user),
     )),
