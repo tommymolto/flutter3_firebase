@@ -20,33 +20,7 @@ class TempHomePage extends StatelessWidget {
     return const Padding(
         padding: EdgeInsets.all(32),
         child: ListUsersWidget(),
-      /*Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Conectado por ',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              user.email ?? user.displayName!,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-              ),
-              icon: const Icon(Icons.arrow_back, size: 32),
-              label: const Text(
-                'Sair',
-                style: TextStyle(fontSize: 24),
-              ),
-              onPressed: () => FirebaseAuth.instance.signOut(),
-            ),
 
-          ],
-        ),*/
 
     );
   }
@@ -59,20 +33,59 @@ class HomePage extends StatefulWidget {
 }
 class _HomePageState extends State<HomePage> {
   final controller = TextEditingController();
-  final remoteConfig = FirebaseRemoteConfig.instance;
+  final _remoteConfig = FirebaseRemoteConfig.instance;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    _initConfig();
+    _remoteConfig.addListener(() {
+      setState(() {
+        print('oi');
+      });
+    });
+
+    super.initState();
+  }
+  Future<void> _initConfig() async {
+    await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(
+          seconds: 1), // a fetch will wait up to 10 seconds before timing out
+      minimumFetchInterval: const Duration(
+          seconds:
+          10), // fetch parameters will be cached for a maximum of 1 hour
+    ));
+
+    _fetchConfig();
+  }
+
+  // Fetching, caching, and activating remote config
+  void _fetchConfig() async {
+    await _remoteConfig.fetchAndActivate();
+    print('settings= ${ _remoteConfig.getBool('settings')}');
+  }
+  @override
   Widget build(BuildContext context) {
+    print('settings= ${ _remoteConfig.getBool('settings')}');
     return Scaffold(
       appBar: AppBar(
-        title: TextField(controller: controller),
+        title: Text(_remoteConfig.getString('titulo').isNotEmpty
+            ? _remoteConfig.getString('titulo')
+            : 'Home'),
         actions: [
-          IconButton(
+          /*IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const SettingsPage(),
               ));
+            },
+          ),*/
+          IconButton(
+            icon: const Icon(Icons.replay_circle_filled),
+            onPressed: () {
+              FirebaseRemoteConfig.instance.fetchAndActivate();
+
             },
           ),
           IconButton(
@@ -83,7 +96,7 @@ class _HomePageState extends State<HomePage> {
               ));
             },
           ),
-          remoteConfig.getBool('settings') ? IconButton(
+          _remoteConfig.getBool('settings') == true ? IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
