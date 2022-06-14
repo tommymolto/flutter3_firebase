@@ -1,3 +1,4 @@
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:kweedo/helpers/helpers_auth.dart';
 import '../widget/icon_widget.dart';
 
 class SettingsPage extends StatefulWidget {
+  static FirebaseInAppMessaging fiam = FirebaseInAppMessaging.instance;
   const SettingsPage({Key? key}) : super(key: key);
 
   @override
@@ -14,6 +16,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  bool canNotify = false;
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: Text( 'Settings')),
@@ -46,10 +49,9 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget buildNotifications() => SimpleSettingsTile(
     title: 'Notifications',
     subtitle: '',
-    leading: const Switch(value: false, onChanged: null),
-    onTap: () async {
+    leading:  Switch(value: canNotify, onChanged: (val) async {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
-
+      await SettingsPage.fiam.triggerEvent( 'teste2');
       NotificationSettings settings = await messaging.requestPermission(
         alert: true,
         announcement: false,
@@ -68,6 +70,12 @@ class _SettingsPageState extends State<SettingsPage> {
         print('User declined or has not accepted permission');
       }
       HelpersAuth.showSnackBar( 'Push Notification OK');
+      setState(() {
+        canNotify = !canNotify;
+      });
+    }),
+    onTap: () async {
+
     },
   );
   Widget buildLogout() => SimpleSettingsTile(

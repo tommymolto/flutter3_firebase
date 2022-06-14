@@ -17,8 +17,8 @@ class TempHomePage extends StatelessWidget {
 
     final user = FirebaseAuth.instance.currentUser!;
 
-    return Padding(
-        padding: const EdgeInsets.all(32),
+    return const Padding(
+        padding: EdgeInsets.all(32),
         child: ListUsersWidget(),
       /*Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -67,6 +67,14 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: TextField(controller: controller),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const SettingsPage(),
+              ));
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {

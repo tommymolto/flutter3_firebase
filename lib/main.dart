@@ -9,7 +9,7 @@ import 'package:kweedo/page/verify_email_page.dart';
 import 'package:kweedo/widget/login_widget.dart';
 import 'animation/fade_animation.dart';
 import 'firebase_options.dart';
-
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
